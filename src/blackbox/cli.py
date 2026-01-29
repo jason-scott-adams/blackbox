@@ -640,6 +640,7 @@ async def detect_patterns(detector_name: str, log) -> int:
         SilenceDetector,
         create_earnings_proximity_detector,
     )
+    from blackbox.notifications import notify_voice
 
     try:
         settings = get_settings()
@@ -676,6 +677,7 @@ async def detect_patterns(detector_name: str, log) -> int:
 
                 for alert in alerts:
                     await alert_repo.create(alert)
+                    await notify_voice(alert)
                     log.info(
                         "Alert created",
                         type=alert.alert_type.value,
@@ -695,6 +697,7 @@ async def detect_patterns(detector_name: str, log) -> int:
 
                 for alert in alerts:
                     await alert_repo.create(alert)
+                    await notify_voice(alert)
                     log.info(
                         "Alert created",
                         type=alert.alert_type.value,
@@ -714,6 +717,7 @@ async def detect_patterns(detector_name: str, log) -> int:
 
                 for alert in alerts:
                     await alert_repo.create(alert)
+                    await notify_voice(alert)
                     log.info(
                         "Alert created",
                         type=alert.alert_type.value,
@@ -733,6 +737,7 @@ async def detect_patterns(detector_name: str, log) -> int:
 
                 for alert in alerts:
                     await alert_repo.create(alert)
+                    await notify_voice(alert)
                     log.info(
                         "Alert created",
                         type=alert.alert_type.value,
@@ -752,6 +757,7 @@ async def detect_patterns(detector_name: str, log) -> int:
 
                 for alert in alerts:
                     await alert_repo.create(alert)
+                    await notify_voice(alert)
                     log.info(
                         "Alert created",
                         type=alert.alert_type.value,
@@ -772,6 +778,7 @@ async def detect_patterns(detector_name: str, log) -> int:
 
                 for alert in alerts:
                     await alert_repo.create(alert)
+                    await notify_voice(alert)
                     log.info(
                         "Alert created",
                         type=alert.alert_type.value,

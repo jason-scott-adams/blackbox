@@ -336,6 +336,7 @@ async def run_detection() -> bool:
         SilenceDetector,
         create_earnings_proximity_detector,
     )
+    from blackbox.notifications import notify_voice
 
     try:
         settings = get_settings()
@@ -361,6 +362,7 @@ async def run_detection() -> bool:
             alerts = await silence_detector.detect(entities, activities)
             for alert in alerts:
                 await alert_repo.create(alert)
+                await notify_voice(alert)
             total_alerts += len(alerts)
 
             # Run anomaly detector
@@ -368,6 +370,7 @@ async def run_detection() -> bool:
             alerts = await anomaly_detector.detect(entities, activities)
             for alert in alerts:
                 await alert_repo.create(alert)
+                await notify_voice(alert)
             total_alerts += len(alerts)
 
             # Run cascade detector
@@ -375,6 +378,7 @@ async def run_detection() -> bool:
             alerts = await cascade_detector.detect(entities, activities)
             for alert in alerts:
                 await alert_repo.create(alert)
+                await notify_voice(alert)
             total_alerts += len(alerts)
 
             # Run broker detector
@@ -382,6 +386,7 @@ async def run_detection() -> bool:
             alerts = await broker_detector.detect(entities, activities)
             for alert in alerts:
                 await alert_repo.create(alert)
+                await notify_voice(alert)
             total_alerts += len(alerts)
 
             # Run rhyme detector
@@ -389,6 +394,7 @@ async def run_detection() -> bool:
             alerts = await rhyme_detector.detect(entities, activities)
             for alert in alerts:
                 await alert_repo.create(alert)
+                await notify_voice(alert)
             total_alerts += len(alerts)
 
             # Run earnings proximity detector
@@ -398,6 +404,7 @@ async def run_detection() -> bool:
                 earnings_alerts = await earnings_detector.detect(entities, activities)
                 for alert in earnings_alerts:
                     await alert_repo.create(alert)
+                    await notify_voice(alert)
                 total_alerts += len(earnings_alerts)
 
         log.info("Detection complete", alerts_created=total_alerts)
