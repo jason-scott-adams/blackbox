@@ -1,10 +1,10 @@
 # Black Box
 
-Personal OSINT pattern detection system for Juno.
+Personal OSINT pattern detection system.
 
 ## Overview
 
-Black Box gathers data from 7 public sources, runs 6 pattern detectors, and outputs JSON digests to Juno's inbox. It runs as a systemd service on Nitro.
+Black Box gathers data from 7 public sources, runs 6 pattern detectors, and outputs JSON digests for downstream analysis — whether that's a personal AI assistant, a dashboard, or a script that reads JSON.
 
 ## Installation
 
@@ -31,7 +31,7 @@ uv run blackbox sync all       # All sources
 uv run blackbox detect all     # All 6 detectors
 
 # Generate digest
-uv run blackbox digest         # Write to juno-inbox
+uv run blackbox digest         # Write to inbox directory
 uv run blackbox digest --dry-run
 
 # System health
@@ -72,7 +72,7 @@ Copy `.env.example` to `.env` and configure API keys. See `.env.example` for all
 ## Architecture
 
 ```
-Clients (7 sources) → SQLite DB → Detectors (6) → Digest JSON → juno-inbox/blackbox/
+Clients (7 sources) → SQLite DB → Detectors (6) → Digest JSON → inbox/
 ```
 
 Runs as `blackbox.service` via systemd.
