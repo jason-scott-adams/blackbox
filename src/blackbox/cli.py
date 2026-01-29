@@ -78,7 +78,7 @@ def main() -> int:
         "detector",
         nargs="?",
         default="all",
-        choices=["all", "silence", "earnings"],
+        choices=["all", "silence", "earnings", "anomaly", "cascade", "broker", "rhyme"],
         help="Detector to run (default: all)",
     )
 
@@ -632,7 +632,14 @@ async def detect_patterns(detector_name: str, log) -> int:
         SQLiteEntityRepository,
     )
     from blackbox.db.session import get_session, init_db
-    from blackbox.detectors import SilenceDetector, create_earnings_proximity_detector
+    from blackbox.detectors import (
+        AnomalyDetector,
+        BrokerDetector,
+        CascadeDetector,
+        RhymeDetector,
+        SilenceDetector,
+        create_earnings_proximity_detector,
+    )
 
     try:
         settings = get_settings()
@@ -679,6 +686,82 @@ async def detect_patterns(detector_name: str, log) -> int:
 
                 total_alerts += len(alerts)
                 log.info("Silence detector complete", alerts_generated=len(alerts))
+
+            # Run anomaly detector
+            if detector_name in ("all", "anomaly"):
+                log.info("Running anomaly detector...")
+                detector = AnomalyDetector()
+                alerts = await detector.detect(entities, activities)
+
+                for alert in alerts:
+                    await alert_repo.create(alert)
+                    log.info(
+                        "Alert created",
+                        type=alert.alert_type.value,
+                        severity=alert.severity.value,
+                        title=alert.title,
+                        confidence=f"{alert.confidence:.2f}",
+                    )
+
+                total_alerts += len(alerts)
+                log.info("Anomaly detector complete", alerts_generated=len(alerts))
+
+            # Run cascade detector
+            if detector_name in ("all", "cascade"):
+                log.info("Running cascade detector...")
+                detector = CascadeDetector()
+                alerts = await detector.detect(entities, activities)
+
+                for alert in alerts:
+                    await alert_repo.create(alert)
+                    log.info(
+                        "Alert created",
+                        type=alert.alert_type.value,
+                        severity=alert.severity.value,
+                        title=alert.title,
+                        confidence=f"{alert.confidence:.2f}",
+                    )
+
+                total_alerts += len(alerts)
+                log.info("Cascade detector complete", alerts_generated=len(alerts))
+
+            # Run broker detector
+            if detector_name in ("all", "broker"):
+                log.info("Running broker detector...")
+                detector = BrokerDetector()
+                alerts = await detector.detect(entities, activities)
+
+                for alert in alerts:
+                    await alert_repo.create(alert)
+                    log.info(
+                        "Alert created",
+                        type=alert.alert_type.value,
+                        severity=alert.severity.value,
+                        title=alert.title,
+                        confidence=f"{alert.confidence:.2f}",
+                    )
+
+                total_alerts += len(alerts)
+                log.info("Broker detector complete", alerts_generated=len(alerts))
+
+            # Run rhyme detector
+            if detector_name in ("all", "rhyme"):
+                log.info("Running rhyme detector...")
+                detector = RhymeDetector()
+                alerts = await detector.detect(entities, activities)
+
+                for alert in alerts:
+                    await alert_repo.create(alert)
+                    log.info(
+                        "Alert created",
+                        type=alert.alert_type.value,
+                        severity=alert.severity.value,
+                        title=alert.title,
+                        confidence=f"{alert.confidence:.2f}",
+                    )
+
+                total_alerts += len(alerts)
+                log.info("Rhyme detector complete", alerts_generated=len(alerts))
 
             # Run earnings proximity detector
             if detector_name in ("all", "earnings"):
