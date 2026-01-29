@@ -44,8 +44,8 @@ class Settings(BaseSettings):
     )
     sec_tracked_companies: str = Field(default="")  # Comma-separated tickers
 
-    # Juno integration
-    juno_inbox_dir: Path = Field(default=Path("/home/atoms/code/juno-inbox/blackbox"))
+    # Digest output
+    inbox_dir: Path = Field(default=Path("./inbox"))
 
     # Schedule intervals (minutes)
     rss_sync_interval: int = Field(default=30)

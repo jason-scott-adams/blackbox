@@ -4,10 +4,11 @@ After=network.target
 
 [Service]
 Type=simple
-User=atoms
-WorkingDirectory=/home/atoms/code/blackbox
-Environment="PATH=/home/atoms/.local/bin:/usr/local/bin:/usr/bin:/bin"
-ExecStart=/home/atoms/.local/bin/uv run blackbox serve
+# Customize User, WorkingDirectory, and paths for your installation
+User=YOUR_USER
+WorkingDirectory=/path/to/blackbox
+Environment="PATH=/usr/local/bin:/usr/bin:/bin"
+ExecStart=uv run blackbox serve
 Restart=always
 RestartSec=30
 

@@ -1,7 +1,7 @@
-"""Digest generator for Juno inbox.
+"""Digest generator.
 
 Generates JSON digests summarizing recent Black Box activity
-for consumption by Juno's autonomous loop.
+for downstream consumption.
 """
 
 from __future__ import annotations
@@ -23,7 +23,7 @@ class DigestConfig(BaseModel):
     output_dir: Annotated[
         Path,
         Field(
-            default=Path("/home/atoms/code/juno-inbox/blackbox"),
+            default=Path("./inbox"),
             description="Directory to write digests",
         ),
     ]
@@ -80,9 +80,9 @@ class FinancialSection(BaseModel):
 
 
 class Digest(BaseModel):
-    """Complete digest for Juno inbox.
+    """Complete digest output.
 
-    Matches expected format from juno/autonomous/inbox.py:
+    Format:
     - date: YYYY-MM-DD
     - source: domain name
     - summary: one paragraph overview
@@ -143,7 +143,7 @@ class DigestGenerator:
             alerts: Recent alerts to include
 
         Returns:
-            Digest ready for Juno inbox
+            Digest ready for output
         """
         now = datetime.now(UTC)
         cutoff = now - timedelta(hours=self.config.lookback_hours)

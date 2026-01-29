@@ -1,7 +1,7 @@
 [project]
 name = "blackbox"
 version = "0.1.0"
-description = "Personal OSINT pattern detection system for JUNO-ZERO"
+description = "Personal OSINT pattern detection system"
 readme = "README.md"
 requires-python = ">=3.12"
 license = { text = "MIT" }

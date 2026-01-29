@@ -122,7 +122,7 @@ class EarningsClient:
         """Ensure HTTP client is initialized."""
         if self._client is None or self._client.is_closed:
             headers = {
-                "User-Agent": "BlackBox/0.1.0 (+https://github.com/atoms/blackbox)",
+                "User-Agent": "BlackBox/0.1.0 (+https://github.com/jason-scott-adams/blackbox)",
             }
             self._client = httpx.AsyncClient(
                 timeout=self.config.timeout,

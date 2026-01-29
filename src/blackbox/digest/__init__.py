@@ -1,4 +1,4 @@
-"""Digest generation for Juno inbox."""
+"""Digest generation module."""
 
 from blackbox.digest.generator import Digest, DigestConfig, DigestFlag, DigestGenerator, DigestItem
 

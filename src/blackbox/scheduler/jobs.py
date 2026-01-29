@@ -408,26 +408,6 @@ async def run_detection() -> bool:
         return False
 
 
-def _load_watch_topics() -> list[str]:
-    """Load watch topics from Juno's watches file."""
-    import re
-    from pathlib import Path
-
-    watches_file = Path("/home/atoms/.claude/MEMORY/context/watches.md")
-    if not watches_file.exists():
-        return []
-
-    content = watches_file.read_text()
-    topics = []
-
-    # Match: - **topic** — Added YYYY-MM-DD
-    pattern = r"- \*\*(.+?)\*\* — Added"
-    for match in re.finditer(pattern, content):
-        topics.append(match.group(1))
-
-    return topics
-
-
 async def run_digest() -> bool:
     """Run digest generation job.
 
@@ -443,11 +423,6 @@ async def run_digest() -> bool:
     try:
         await init_db()
 
-        # Load watch topics from Juno
-        watch_topics = _load_watch_topics()
-        if watch_topics:
-            log.info("Loaded watch topics", topics=watch_topics)
-
         async with get_session() as session:
             activity_repo = SQLiteActivityRepository(session)
             alert_repo = SQLiteAlertRepository(session)
@@ -456,7 +431,7 @@ async def run_digest() -> bool:
             alerts = await alert_repo.list(limit=500)
 
         config = DigestConfig()
-        generator = DigestGenerator(config, watch_topics=watch_topics)
+        generator = DigestGenerator(config)
         digest = generator.generate(activities, alerts)
 
         # Only write if there's something to report

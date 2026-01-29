@@ -101,7 +101,7 @@ class TestDigestConfig:
         config = DigestConfig()
         assert config.lookback_hours == 24
         assert config.include_resolved_alerts is False
-        assert config.output_dir == Path("/home/atoms/code/juno-inbox/blackbox")
+        assert config.output_dir == Path("./inbox")
 
     def test_custom_config(self):
         """Test custom configuration."""

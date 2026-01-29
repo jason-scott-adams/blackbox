@@ -39,7 +39,7 @@ class RSSConfig(BaseModel):
     feeds: list[FeedConfig] = Field(default_factory=list)
     timeout: float = 30.0
     max_entries_per_feed: int = 50
-    user_agent: str = "BlackBox/0.1.0 (+https://github.com/atoms/blackbox)"
+    user_agent: str = "BlackBox/0.1.0 (+https://github.com/jason-scott-adams/blackbox)"
 
 
 # --- Feed Data Models ---

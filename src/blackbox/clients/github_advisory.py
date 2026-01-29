@@ -124,7 +124,7 @@ class GitHubAdvisoryClient:
         if self._client is None or self._client.is_closed:
             headers = {
                 "Accept": "application/vnd.github+json",
-                "User-Agent": "BlackBox/0.1.0 (+https://github.com/atoms/blackbox)",
+                "User-Agent": "BlackBox/0.1.0 (+https://github.com/jason-scott-adams/blackbox)",
                 "X-GitHub-Api-Version": "2022-11-28",
             }
             if self.config.token:

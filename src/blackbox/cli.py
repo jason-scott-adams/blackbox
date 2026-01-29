@@ -1,7 +1,6 @@
 """Command-line interface for Black Box.
 
-Simplified CLI for JUNO-ZERO integration - no API server, just
-sync, detect, and digest commands.
+CLI for sync, detect, and digest commands.
 """
 
 import argparse
@@ -33,7 +32,7 @@ def main() -> int:
     """Main CLI entry point."""
     parser = argparse.ArgumentParser(
         prog="blackbox",
-        description="Black Box: Personal OSINT pattern detection for JUNO-ZERO",
+        description="Black Box: Personal OSINT pattern detection system",
     )
 
     parser.add_argument(
@@ -84,7 +83,7 @@ def main() -> int:
     )
 
     # Digest command
-    digest_parser = subparsers.add_parser("digest", help="Generate digest for Juno")
+    digest_parser = subparsers.add_parser("digest", help="Generate digest")
     digest_parser.add_argument(
         "--dry-run",
         action="store_true",
@@ -710,33 +709,13 @@ async def detect_patterns(detector_name: str, log) -> int:
 
 
 def run_digest(args: argparse.Namespace) -> int:
-    """Generate digest for Juno."""
+    """Generate digest."""
     log = get_logger("digest")
     return asyncio.run(generate_digest(args.dry_run, args.hours, log))
 
 
-def load_watch_topics() -> list[str]:
-    """Load watch topics from Juno's watches file."""
-    import re
-    from pathlib import Path
-
-    watches_file = Path("/home/atoms/.claude/MEMORY/context/watches.md")
-    if not watches_file.exists():
-        return []
-
-    content = watches_file.read_text()
-    topics = []
-
-    # Match: - **topic** — Added YYYY-MM-DD
-    pattern = r"- \*\*(.+?)\*\* — Added"
-    for match in re.finditer(pattern, content):
-        topics.append(match.group(1))
-
-    return topics
-
-
 async def generate_digest(dry_run: bool, lookback_hours: int, log) -> int:
-    """Generate and write digest to Juno inbox."""
+    """Generate and write digest."""
     from blackbox.db.repositories import SQLiteActivityRepository, SQLiteAlertRepository
     from blackbox.db.session import get_session, init_db
     from blackbox.digest import DigestConfig, DigestGenerator
@@ -744,11 +723,6 @@ async def generate_digest(dry_run: bool, lookback_hours: int, log) -> int:
     try:
         # Initialize database
         await init_db()
-
-        # Load watch topics from Juno
-        watch_topics = load_watch_topics()
-        if watch_topics:
-            log.info("Loaded watch topics", topics=watch_topics)
 
         async with get_session() as session:
             activity_repo = SQLiteActivityRepository(session)
@@ -766,7 +740,7 @@ async def generate_digest(dry_run: bool, lookback_hours: int, log) -> int:
 
             # Generate digest
             config = DigestConfig(lookback_hours=lookback_hours)
-            generator = DigestGenerator(config, watch_topics=watch_topics)
+            generator = DigestGenerator(config)
             digest = generator.generate(activities, alerts)
 
             log.info(

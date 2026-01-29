@@ -1,8 +1,7 @@
 """Scheduler service for Black Box.
 
 Runs automated syncs, pattern detection, and digest generation
-using APScheduler. Follows Juno's autonomous loop patterns for
-signal handling and graceful shutdown.
+using APScheduler with signal handling and graceful shutdown.
 """
 
 import asyncio
